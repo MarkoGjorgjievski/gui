@@ -1,14 +1,15 @@
 <script lang="ts" context="module">
 	import { z } from 'zod';
 	export const profileFormSchema = z.object({
-		resultsTarget: z.number(),
-		username: z
-			.string()
-			.min(2, 'Username must be at least 2 characters.')
-			.max(30, 'Username must not be longer than 30 characters'),
-		email: z.string({ required_error: 'Please select an email to display' }).email(),
-		bio: z.string().min(4).max(160).default('I own a computer.'),
-		urls: z.array(z.string().url()).default(['https://shadcn.com', 'https://twitter.com/shadcn'])
+		resultsTarget: z.string(),
+		loadedSelector: z.string(),
+		waitForSelectorToLoad: z.string(),
+		noResultsXPath: z.string().default('//h1[contains(text(),"404")]'),
+		accessDeniedXPath: z.string().default('//h1[contains(text(),"Denied")]'),
+		orderedSelectorsToClickOn: z
+			.array(z.string())
+			.default(['//div#modal', '//section.toggle__open']),
+		loadingTimeout: z.string().default('5000')
 	});
 	export type ProfileFormSchema = typeof profileFormSchema;
 </script>
@@ -25,6 +26,9 @@
 	import { cn } from '$lib/utils.js';
 	import { browser } from '$app/environment';
 	import { tick } from 'svelte';
+	import { Badge } from '$lib/components/ui/badge';
+	import { Slider } from '$lib/components/ui/slider';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 
 	export let data: SuperValidated<Infer<ProfileFormSchema>>;
 
@@ -34,89 +38,143 @@
 
 	const { form: formData, enhance } = form;
 
-	function addUrl() {
-		$formData.urls = [...$formData.urls, ''];
+	$: slider = [+$formData.loadingTimeout];
+
+	function addOrderedSelector() {
+		$formData.orderedSelectorsToClickOn = [...$formData.orderedSelectorsToClickOn, ''];
 
 		tick().then(() => {
-			const urlInputs = Array.from(
-				document.querySelectorAll<HTMLElement>("#profile-form input[name='urls']")
+			const orderedSelectors = Array.from(
+				document.querySelectorAll<HTMLElement>(
+					"#profile-form input[name='orderedSelectorsToClickOn']"
+				)
 			);
-			const lastInput = urlInputs[urlInputs.length - 1];
-			lastInput && lastInput.focus();
+			const lastSelector = orderedSelectors[orderedSelectors.length - 1];
+			lastSelector && lastSelector.focus();
 		});
 	}
-
-	$: selectedEmail = {
-		label: $formData.email,
-		value: $formData.email
-	};
 </script>
 
 <form method="POST" class="space-y-8" use:enhance id="profile-form">
 	<Form.Field {form} name="resultsTarget">
 		<Form.Control let:attrs>
 			<Form.Label>Results target</Form.Label>
-			<Input placeholder="2" {...attrs} bind:value={$formData.resultsTarget} type="number" />
+			<Input placeholder="0" {...attrs} bind:value={$formData.resultsTarget} type="number" />
 		</Form.Control>
 		<Form.Description>
-			This is your public display name. It can be your real name or a pseudonym. You can only change
-			this once every 30 days.
+			Number of results after which the extracting stops. In case of pagination, a results target
+			must be set.
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Field {form} name="email">
+	<Form.Field {form} name="loadedSelector">
 		<Form.Control let:attrs>
-			<Form.Label>Email</Form.Label>
-			<Select.Root
-				selected={selectedEmail}
-				onSelectedChange={(s) => {
-					s && ($formData.email = s.value);
-				}}
-			>
-				<Select.Trigger {...attrs}>
-					<Select.Value placeholder="Select a verified email to display" />
-				</Select.Trigger>
-				<Select.Content>
-					<Select.Item value="m@example.com" label="m@example.com" />
-					<Select.Item value="m@google.com" label="m@google.com" />
-					<Select.Item value="m@support.com" label="m@supporte.com" />
-				</Select.Content>
-			</Select.Root>
-			<input hidden name={attrs.name} bind:value={$formData.email} />
+			<Form.Label>
+				Loaded selector
+				<Badge variant="secondary">css</Badge>
+			</Form.Label>
+			<Input placeholder={`main#page`} {...attrs} bind:value={$formData.loadedSelector} />
 		</Form.Control>
 		<Form.Description>
-			You can manage verified email addresses in your <a href="/examples/forms">email settings</a>.
+			Selector for an element that is present when the page is correctly loaded.
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
-	<Form.Field {form} name="bio">
+
+	<Form.Field {form} name="waitForSelectorToLoad">
 		<Form.Control let:attrs>
-			<Form.Label>Bio</Form.Label>
-			<Textarea {...attrs} bind:value={$formData.bio} />
+			<Form.Label>
+				Wait for selector to load
+				<Badge variant="secondary">css</Badge>
+			</Form.Label>
+			<Input placeholder={`div.content`} {...attrs} bind:value={$formData.waitForSelectorToLoad} />
 		</Form.Control>
-		<Form.Description>
-			You can <span>@mention</span> other users and organizations to link to them.
-		</Form.Description>
+		<Form.Description
+			>Extractor will wait for this selector to load for the amount of time specified in the loading
+			timeout.</Form.Description
+		>
 		<Form.FieldErrors />
 	</Form.Field>
+
+	<Form.Field {form} name="loadingTimeout">
+		<Form.Control let:attrs>
+			<Form.Label>Loading timeout</Form.Label>
+			<Input
+				placeholder={`//h1[contains(text(),"Denied")]`}
+				{...attrs}
+				bind:value={$formData.loadingTimeout}
+				type="hidden"
+			/>
+			<span class="flex items-center">
+				<Slider
+					bind:value={slider}
+					max={60000}
+					min={1000}
+					step={1000}
+					class="mx-2 my-4 max-w-[70%]"
+					onValueChange={(e) => ($formData.loadingTimeout = `${e[0]}`)}
+				/>
+				<span class="text-xs font-medium"
+					>{`${$formData.loadingTimeout}ms (${+$formData.loadingTimeout / 1000}s)`}</span
+				>
+			</span>
+		</Form.Control>
+	</Form.Field>
+
+	<Form.Field {form} name="noResultsXPath">
+		<Form.Control let:attrs>
+			<Form.Label>
+				No results
+				<Badge variant="outline">xpath</Badge>
+			</Form.Label>
+			<Input
+				placeholder={`//h1[contains(text(),"404")]`}
+				{...attrs}
+				bind:value={$formData.noResultsXPath}
+			/>
+		</Form.Control>
+		<Form.Description>XPath of element from a page where results are not present.</Form.Description>
+		<Form.FieldErrors />
+	</Form.Field>
+
+	<Form.Field {form} name="accessDeniedXPath">
+		<Form.Control let:attrs>
+			<Form.Label>
+				Access denied
+				<Badge variant="outline">xpath</Badge>
+			</Form.Label>
+			<Input
+				placeholder={`//h1[contains(text(),"Denied")]`}
+				{...attrs}
+				bind:value={$formData.accessDeniedXPath}
+			/>
+		</Form.Control>
+		<Form.Description>XPath of element from a page where results are not present.</Form.Description>
+		<Form.FieldErrors />
+	</Form.Field>
+
 	<div>
-		<Form.Fieldset {form} name="urls">
-			<Form.Legend>URLs</Form.Legend>
-			{#each $formData.urls as _, i}
-				<Form.ElementField {form} name="urls[{i}]">
+		<Form.Fieldset {form} name="orderedSelectorsToClickOn">
+			<Form.Legend>
+				Ordered selectors to click on
+				<Badge variant="secondary">css</Badge>
+			</Form.Legend>
+			{#each $formData.orderedSelectorsToClickOn as _, i}
+				<Form.ElementField {form} name="orderedSelectorsToClickOn[{i}]">
 					<Form.Description class={cn(i !== 0 && 'sr-only')}>
-						Add links to your website, blog, or social media profiles.
+						These selectors will be clicked on when extractor lands on the page. Commonly used for
+						modals, side panels, popovers, etc.
 					</Form.Description>
 					<Form.Control let:attrs>
-						<Input {...attrs} bind:value={$formData.urls[i]} />
+						<Input {...attrs} bind:value={$formData.orderedSelectorsToClickOn[i]} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.ElementField>
 			{/each}
 		</Form.Fieldset>
-		<Button type="button" variant="outline" size="sm" class="mt-2" on:click={addUrl}>
-			Add URL
+		<Button type="button" variant="outline" size="sm" class="mt-2" on:click={addOrderedSelector}>
+			Add Selector
 		</Button>
 	</div>
 

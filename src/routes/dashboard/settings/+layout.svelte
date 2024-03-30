@@ -39,8 +39,8 @@
 			<SidebarNav items={sidebarNavItems} />
 		</aside>
 		<div class="w-full flex-1 lg:max-w-2xl">
-			<ScrollArea class="h-screen w-fit">
-				<slot />
+			<ScrollArea class="h-[80vh]">
+				<div class="pb-4 pl-0.5 pr-3"><slot /></div>
 			</ScrollArea>
 		</div>
 	</div>

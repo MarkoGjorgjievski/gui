@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types.js';
-	import IndexForm from './index-form.svelte';
+	import SinglePageForm from './single-page-form.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	export let data: PageData;
+	console.log(data);
 </script>
 
 <div class="space-y-6">
@@ -13,5 +14,5 @@
 		</p>
 	</div>
 	<Separator />
-	<IndexForm data={data.form} />
+	<SinglePageForm data={data.form} />
 </div>

@@ -1,18 +1,19 @@
+
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { PageServerLoad } from './$types.js';
 import { fail, type Actions } from '@sveltejs/kit';
-import { goto2Schema } from '$lib/schema.js';
+import { singlePageSchema } from '$lib/schema.js';
+import type { PageServerLoad } from '../$types';
 
 export const load: PageServerLoad = async () => {
 	return {
-		form: await superValidate(zod(goto2Schema))
+		form: await superValidate(zod(singlePageSchema))
 	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event, zod(goto2Schema));
+		const form = await superValidate(event, zod(singlePageSchema));
 		if (!form.valid) {
 			return fail(400, {
 				form

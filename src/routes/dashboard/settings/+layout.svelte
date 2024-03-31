@@ -12,6 +12,15 @@
 		{
 			title: 'Goto 2',
 			href: '/dashboard/settings/goto2'
+		},
+		{
+			title: 'Single page',
+			href: '/dashboard/settings/singlePage',
+			separator: 'before'
+		},
+		{
+			title: 'Multi pages',
+			href: '/dashboard/settings/multiPages'
 		}
 	];
 </script>

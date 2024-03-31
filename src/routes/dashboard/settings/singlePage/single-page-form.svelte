@@ -13,39 +13,39 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Slider } from '$lib/components/ui/slider';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { type IndexSchema, indexSchema } from '$lib/schema';
+	import { type SinglePageSchema, singlePageSchema } from '$lib/schema';
 
-	export let data: SuperValidated<Infer<IndexSchema>>;
+	export let data: SuperValidated<Infer<SinglePageSchema>>;
 
 	const form = superForm(data, {
-		validators: zodClient(indexSchema),
+		validators: zodClient(singlePageSchema),
 		dataType: 'json'
 	});
 
 	const { form: formData, enhance } = form;
 
-	$: slider = [+$formData.loadingTimeout];
+	// $: slider = [+$formData.loadingTimeout];
 
-	function addOrderedSelector() {
-		$formData.orderedSelectorsToClickOn = [...$formData.orderedSelectorsToClickOn, ''];
+	// function addOrderedSelector() {
+	// 	$formData.orderedSelectorsToClickOn = [...$formData.orderedSelectorsToClickOn, ''];
 
-		tick().then(() => {
-			const orderedSelectors = Array.from(
-				document.querySelectorAll<HTMLElement>(
-					"#index-form input[name='orderedSelectorsToClickOn']"
-				)
-			);
-			const lastSelector = orderedSelectors[orderedSelectors.length - 1];
-			lastSelector && lastSelector.focus();
-		});
-	}
+	// 	tick().then(() => {
+	// 		const orderedSelectors = Array.from(
+	// 			document.querySelectorAll<HTMLElement>(
+	// 				"#profile-form input[name='orderedSelectorsToClickOn']"
+	// 			)
+	// 		);
+	// 		const lastSelector = orderedSelectors[orderedSelectors.length - 1];
+	// 		lastSelector && lastSelector.focus();
+	// 	});
+	// }
 </script>
 
-<form method="POST" class="space-y-8" use:enhance id="index-form">
-	<Form.Field {form} name="resultsTarget">
+<form method="POST" class="space-y-8" use:enhance id="profile-form">
+	<Form.Field {form} name="colour">
 		<Form.Control let:attrs>
 			<Form.Label>Results target</Form.Label>
-			<Input placeholder="0" {...attrs} bind:value={$formData.resultsTarget} type="number" />
+			<Input placeholder="0" {...attrs} bind:value={$formData.colour} type="number" />
 		</Form.Control>
 		<Form.Description>
 			Number of results after which the extracting stops. In case of pagination, a results target
@@ -54,7 +54,7 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Field {form} name="loadedSelector">
+	<!-- <Form.Field {form} name="loadedSelector">
 		<Form.Control let:attrs>
 			<Form.Label>
 				Loaded selector
@@ -166,7 +166,7 @@
 		<Button type="button" variant="outline" size="sm" class="mt-2" on:click={addOrderedSelector}>
 			Add Selector
 		</Button>
-	</div>
+	</div> -->
 
 	<Form.Button>Update profile</Form.Button>
 </form>

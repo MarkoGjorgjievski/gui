@@ -4,9 +4,10 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cubicInOut } from 'svelte/easing';
 	import { crossfade } from 'svelte/transition';
+	import { Separator } from '$lib/components/ui/separator';
 
 	let className: string | undefined | null = undefined;
-	export let items: { href: string; title: string }[];
+	export let items: { href: string; title: string; separator?: string }[];
 	export { className as class };
 
 	const [send, receive] = crossfade({
@@ -18,7 +19,9 @@
 <nav class={cn('flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1', className)}>
 	{#each items as item}
 		{@const isActive = $page.url.pathname === item.href}
-
+		{#if item?.separator === 'before'}
+			<Separator />
+		{/if}
 		<Button
 			href={item.href}
 			variant="ghost"
@@ -36,5 +39,8 @@
 				{item.title}
 			</div>
 		</Button>
+		{#if item?.separator === 'after'}
+			<Separator />
+		{/if}
 	{/each}
 </nav>

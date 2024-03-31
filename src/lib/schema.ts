@@ -74,6 +74,8 @@ export const indexSchema = z.object({
 	paginate: paginateSchemaRaw
 });
 
+export type IndexSchema = typeof indexSchema;
+
 export const countries = [
 	{ label: 'United Kingdom', value: 'UK' },
 	{ label: 'France', value: 'FR' },
@@ -88,7 +90,7 @@ export const countries = [
 
 type Country = (typeof countries)[number]['value'];
 
-export const goto2Params = z.object({
+export const goto2Schema = z.object({
 	blockUnnecessaryRequests: z
 		.array(z.enum(['xhr', 'script', 'font', 'stylesheet']))
 		.default(['xhr', 'script', 'font', 'stylesheet']),
@@ -129,6 +131,27 @@ export const goto2Params = z.object({
 	schemaYAML: z.string().default('multiPages')
 });
 
+export type Goto2Schema = typeof goto2Schema;
+
+export const blockUnnecessaryRequests = [
+	{
+		id: 'xhr',
+		label: 'xhr'
+	},
+	{
+		id: 'script',
+		label: 'script'
+	},
+	{
+		id: 'font',
+		label: 'font'
+	},
+	{
+		id: 'stylesheet',
+		label: 'stylesheet'
+	}
+] as const;
+
 export const singlePageSchema = z.object({
 	alternative_images: z.array(z.string()),
 	average_rating: z.string(),
@@ -167,3 +190,5 @@ export const singlePageSchema = z.object({
 	weight_unit: z.string(),
 	width: z.string()
 });
+
+export type SinglePageSchema = typeof singlePageSchema;

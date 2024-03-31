@@ -1,27 +1,3 @@
-<script lang="ts" context="module">
-	export const notificationsFormSchema = goto2Params;
-	type NotificationFormSchema = typeof notificationsFormSchema;
-
-	const blockUnnecessaryRequests = [
-		{
-			id: 'xhr',
-			label: 'xhr'
-		},
-		{
-			id: 'script',
-			label: 'script'
-		},
-		{
-			id: 'font',
-			label: 'font'
-		},
-		{
-			id: 'stylesheet',
-			label: 'stylesheet'
-		}
-	] as const;
-</script>
-
 <script lang="ts">
 	import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form/index.js';
@@ -31,7 +7,7 @@
 	import * as Checkbox from '$lib/components/ui/checkbox/index.js';
 
 	import { browser } from '$app/environment';
-	import { goto2Params, countries } from '$lib/schema';
+	import { blockUnnecessaryRequests, countries, goto2Schema, type Goto2Schema } from '$lib/schema';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import { cn } from '$lib/utils';
@@ -41,10 +17,10 @@
 	import CaretSort from 'svelte-radix/CaretSort.svelte';
 	import { Input } from '$lib/components/ui/input';
 
-	export let data: SuperValidated<Infer<NotificationFormSchema>>;
+	export let data: SuperValidated<Infer<Goto2Schema>>;
 
 	const form = superForm(data, {
-		validators: zodClient(notificationsFormSchema),
+		validators: zodClient(goto2Schema),
 		dataType: 'json'
 	});
 

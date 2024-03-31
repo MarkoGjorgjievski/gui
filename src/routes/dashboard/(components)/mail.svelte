@@ -12,6 +12,7 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Search from 'lucide-svelte/icons/search';
 	import type { Account, Mail } from '../data.js';
+	import QuickSearch from './quick-search.svelte';
 
 	export let accounts: Account[];
 	export let mails: Mail[];
@@ -79,6 +80,7 @@
 					</div>
 				</form>
 			</div>
+			
 			<Tabs.Content value="all" class="m-0">
 				<MailList items={mails} />
 			</Tabs.Content>

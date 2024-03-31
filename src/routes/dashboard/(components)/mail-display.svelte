@@ -38,7 +38,7 @@
 	}
 </script>
 
-<div class="flex h-full flex-col">
+<div class="flex flex-col">
 	<div class="mb-1 flex items-center p-2">
 		<div class="flex items-center gap-2">
 			<Tooltip.Root openDelay={0} group>
@@ -182,54 +182,4 @@
 		</DropdownMenu.Root>
 	</div>
 	<Separator />
-	{#if mail}
-		<div class="flex h-full flex-1 flex-col overflow-hidden">
-			<div class="flex items-start p-4">
-				<div class="flex items-start gap-4 text-sm">
-					<Avatar.Root>
-						<Avatar.Image alt={mail.name} />
-						<Avatar.Fallback>
-							{mail.name
-								.split(' ')
-								.map((chunk) => chunk[0])
-								.join('')}
-						</Avatar.Fallback>
-					</Avatar.Root>
-					<div class="grid gap-1">
-						<div class="font-semibold">{mail.name}</div>
-						<div class="line-clamp-1 text-xs">{mail.subject}</div>
-						<div class="line-clamp-1 text-xs">
-							<span class="font-medium">Reply-To:</span>
-							{mail.email}
-						</div>
-					</div>
-				</div>
-				{#if mail.date}
-					<div class="ml-auto text-xs text-muted-foreground">
-						{fullFormatter.format(new Date(mail.date))}
-					</div>
-				{/if}
-			</div>
-			<Separator />
-			<div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-				{mail.text}
-			</div>
-			<Separator class="mt-auto" />
-			<div class="p-4">
-				<form>
-					<div class="grid gap-4">
-						<Textarea class="p-4" placeholder={`Reply ${mail.name}...`} />
-						<div class="flex items-center">
-							<Label for="mute" class="flex items-center gap-2 text-xs font-normal">
-								<Switch id="mute" aria-label="Mute thread" /> Mute this thread
-							</Label>
-							<Button size="sm" class="ml-auto">Send</Button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	{:else}
-		<div class="p-8 text-center text-muted-foreground">No message selected</div>
-	{/if}
 </div>

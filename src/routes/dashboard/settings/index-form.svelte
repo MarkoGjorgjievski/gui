@@ -1,6 +1,8 @@
 <script lang="ts" context="module">
 	export const profileFormSchema = indexSchema;
 	export type ProfileFormSchema = typeof profileFormSchema;
+
+	console.log(profileFormSchema.shape);
 </script>
 
 <script lang="ts">

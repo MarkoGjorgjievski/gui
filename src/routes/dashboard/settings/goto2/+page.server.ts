@@ -1,7 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types.js';
-import { notificationsFormSchema } from './notifications-form.svelte';
+import { notificationsFormSchema } from './goto2-form.svelte';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {

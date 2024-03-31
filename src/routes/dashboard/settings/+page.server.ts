@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types.js';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { profileFormSchema } from './profile-form.svelte';
+import { profileFormSchema } from './index-form.svelte';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {

@@ -1,29 +1,5 @@
 <script lang="ts" context="module">
-	import { z } from 'zod';
-
-	export const profileFormSchema = z.object({
-		resultsTarget: z.string().nullable().default(null),
-		loadedSelector: z.string().nullable().default(null),
-		waitForSelectorToLoad: z.string().nullable().default(null),
-		noResultsXPath: z.string().default('//h1[contains(text(),"404")]'),
-		accessDeniedXPath: z.string().default('//h1[contains(text(),"Denied")]'),
-		orderedSelectorsToClickOn: z.array(z.string()).default(['']),
-		loadingTimeout: z.number().default(5000),
-		checkXpathBeforeExtract: z.string().nullable().default(null),
-		URLTemplate: z.string().nullable().default(null),
-		setZipCode: setZipCode.default({}),
-		zipcode: z.string().nullable().default(null),
-		storeID: z.string().nullable().default(null),
-		useGoto2: z.boolean().default(true),
-		schemaYAML: z.string().default('singlePage'),
-		mergeType: z.enum(['APPEND', 'REPLACE']).default('APPEND'),
-		maxScrolls: z.number().default(3),
-		arrayOfInputFieldNamesToAdd: z.array(z.string()).nullable().default(null),
-		addAttributeToExtractedRecords: z.any().nullable().default(null),
-		enableAutoTable: z.boolean().default(true),
-		domain: z.string().default('amazon'),
-		paginate: paginateSchemaRaw
-	});
+	export const profileFormSchema = indexSchema;
 	export type ProfileFormSchema = typeof profileFormSchema;
 </script>
 
@@ -42,7 +18,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Slider } from '$lib/components/ui/slider';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { paginateSchemaRaw, setZipCode } from '$lib/schema';
+	import { indexSchema } from '$lib/schema';
 
 	export let data: SuperValidated<Infer<ProfileFormSchema>>;
 

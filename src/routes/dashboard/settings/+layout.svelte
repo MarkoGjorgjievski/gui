@@ -5,24 +5,12 @@
 
 	const sidebarNavItems = [
 		{
-			title: 'Profile',
+			title: 'Index',
 			href: '/dashboard/settings'
 		},
 		{
-			title: 'Account',
-			href: '/dashboard/settings/account'
-		},
-		{
-			title: 'Appearance',
-			href: '/dashboard/settings/appearance'
-		},
-		{
-			title: 'Notifications',
-			href: '/dashboard/settings/notifications'
-		},
-		{
-			title: 'Display',
-			href: '/dashboard/settings/display'
+			title: 'Goto 2',
+			href: '/dashboard/settings/goto2'
 		}
 	];
 </script>

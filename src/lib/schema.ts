@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const nextLinkSchema = z.object({
+const nextLinkSchema = z.object({
 	nextLinkSelectorOrXpath: z.string().nullable().default(null),
 	mutationSelectorOrXpath: z.string().nullable().default(null),
 	spinnerSelectorOrXpath: z.string().nullable().default(null),
@@ -8,13 +8,13 @@ export const nextLinkSchema = z.object({
 	waitForXpath: z.string().nullable().default(null)
 });
 
-export const infiniteScrollSchema = z.object({
+const infiniteScrollSchema = z.object({
 	maxScrolls: z.number().nullable().default(null),
 	stopXPath: z.string().nullable().default(null),
 	waitTime: z.number().nullable().default(null)
 });
 
-export const openSearchDefinitionSchema = z.object({
+const openSearchDefinitionSchema = z.object({
 	template: z.string().nullable().default(null),
 	pageStartNb: z.number().nullable().default(null),
 	indexOffset: z.number().nullable().default(null),
@@ -22,12 +22,12 @@ export const openSearchDefinitionSchema = z.object({
 	pageIndexMultiplier: z.number().nullable().default(null)
 });
 
-export const nestedPaginationRaw = z.object({
+const nestedPaginationRaw = z.object({
 	nextDepthURLFieldName: z.string().nullable().default(null),
 	paginate: z.object({}).nullable().default(null)
 });
 
-export const paginateSchemaRaw = z.object({
+const paginateSchemaRaw = z.object({
 	stopConditionSelectorOrXpath: z.string().nullable().default(null),
 	nextLink: nextLinkSchema.default({}),
 	infiniteScroll: infiniteScrollSchema.default({}),
@@ -42,10 +42,89 @@ const setZipWithUISchema = z.object({
 	wait: z.number().default(3000)
 });
 
-export const setZipCode = z
+const setZipCode = z
 	.object({
 		checkZipCodeSelectorOrXPath: z.string().nullable().default(null),
 		maxTries: z.number().default(1),
 		setZipWithUI: setZipWithUISchema.default({})
 	})
 	.default({ maxTries: 1, setZipWithUI: {} });
+
+export const indexSchema = z.object({
+	resultsTarget: z.string().nullable().default(null),
+	loadedSelector: z.string().nullable().default(null),
+	waitForSelectorToLoad: z.string().nullable().default(null),
+	noResultsXPath: z.string().default('//h1[contains(text(),"404")]'),
+	accessDeniedXPath: z.string().default('//h1[contains(text(),"Denied")]'),
+	orderedSelectorsToClickOn: z.array(z.string()).default(['']),
+	loadingTimeout: z.number().default(5000),
+	checkXpathBeforeExtract: z.string().nullable().default(null),
+	URLTemplate: z.string().nullable().default(null),
+	setZipCode: setZipCode.default({}),
+	zipcode: z.string().nullable().default(null),
+	storeID: z.string().nullable().default(null),
+	useGoto2: z.boolean().default(true),
+	schemaYAML: z.string().default('singlePage'),
+	mergeType: z.enum(['APPEND', 'REPLACE']).default('APPEND'),
+	maxScrolls: z.number().default(3),
+	arrayOfInputFieldNamesToAdd: z.array(z.string()).nullable().default(null),
+	addAttributeToExtractedRecords: z.any().nullable().default(null),
+	enableAutoTable: z.boolean().default(true),
+	domain: z.string().default('amazon'),
+	paginate: paginateSchemaRaw
+});
+
+export const countries = [
+	{ label: 'United Kingdom', value: 'UK' },
+	{ label: 'France', value: 'FR' },
+	{ label: 'Germany', value: 'DE' },
+	{ label: 'Spain', value: 'ES' },
+	{ label: 'Portugal', value: 'PT' },
+	{ label: 'Russia', value: 'RU' },
+	{ label: 'Japan', value: 'JP' },
+	{ label: 'South Korea', value: 'KO' },
+	{ label: 'Belgium', value: 'BE' }
+] as const;
+
+type Country = (typeof countries)[number]['value'];
+
+export const goto2Params = z.object({
+	blockUnnecessaryRequests: z
+		.array(z.enum(['xhr', 'script', 'font', 'stylesheet']))
+		.default(['xhr', 'script', 'font', 'stylesheet']),
+	setBlockAds: z.boolean().default(false),
+	setBypassCSP: z.boolean().default(true),
+	setLoadAllResources: z.boolean().default(true),
+	setLoadImages: z.boolean().default(true),
+	setCssEnabled: z.boolean().default(true),
+	applyIgnoreVBAndCookies: z.any().nullable().default(null),
+	optTags: z.any().nullable().default(null),
+	timeout: z.number().default(60000),
+	waitUntil: z.enum(['networkidle0', 'networkidle1', 'networkidle2']).default('networkidle0'),
+	acceptCookiesCSSSelector: z.string().nullable().default(null),
+	captchaSelectors: z.record(z.string(), z.unknown()).default({}),
+	submitCaptchaButtonCSS: z.string().nullable().default(null),
+	waitAfterNavObject: z
+		.object({
+			wrongRedirectSelector: z.string().default(''),
+			selector: z.string().default(''),
+			selectorType: z.string().default(''),
+			delay: z.number().nullable().default(null)
+		})
+		.default({
+			wrongRedirectSelector: '',
+			selector: '',
+			selectorType: '',
+			delay: null
+		}),
+	store: z.any().nullable().default(null),
+	country: z.enum(countries.map((country) => country.value) as [Country, ...Country[]]),
+	gotoRetries: z.number().nullable().default(null),
+	rawOptions: z
+		.object({
+			checkBlocked: z.boolean().default(true)
+		})
+		.default({ checkBlocked: true }),
+	domain: z.string().default('amazon'),
+	schemaYAML: z.string().default('multiPages')
+});

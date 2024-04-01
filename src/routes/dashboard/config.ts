@@ -8,6 +8,7 @@ export type Route = {
 	label: string;
 	icon: ComponentType<Icon>;
 	variant: 'default' | 'ghost';
+	routes?: Route[];
 };
 
 export const primaryRoutes: Route[] = [
@@ -15,7 +16,37 @@ export const primaryRoutes: Route[] = [
 		title: 'Inbox',
 		label: '128',
 		icon: Icons.Inbox,
-		variant: 'default'
+		variant: 'default',
+		routes: [
+			{
+				title: 'SubInbox',
+				label: '128',
+				icon: Icons.Inbox,
+				variant: 'default',
+				routes: [
+					{
+						title: 'Drafts very',
+						label: '9',
+						icon: Icons.File,
+						variant: 'ghost'
+					}
+				]
+			},
+			{
+				title: 'SubInbox 2',
+				label: '128',
+				icon: Icons.Inbox,
+				variant: 'default',
+				routes: [
+					{
+						title: 'Drafts very 2',
+						label: '9',
+						icon: Icons.File,
+						variant: 'ghost'
+					}
+				]
+			}
+		]
 	},
 	{
 		title: 'Drafts',

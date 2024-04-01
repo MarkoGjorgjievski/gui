@@ -4,6 +4,7 @@
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import type { Route } from '../config.js';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
+	import NestedAccordion from './nested-accordion.svelte';
 
 	export let isCollapsed: boolean;
 	export let routes: Route[];
@@ -13,18 +14,8 @@
 	<nav
 		class="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2"
 	>
-		<Accordion.Root class="w-full">
-			{#each routes as route, i}
-				<Accordion.Item value="item-{i}" class="px-2">
-					<Accordion.Trigger class="py-2.5">
-						<span class="flex items-center gap-1">
-							<svelte:component this={route.icon} class="mr-2 size-4" aria-hidden="true" />
-							{route.title}
-						</span>
-					</Accordion.Trigger>
-					<Accordion.Content>Yes. It adheres to the WAI-ARIA design pattern.</Accordion.Content>
-				</Accordion.Item>
-			{/each}
+		<Accordion.Root class="w-full" multiple>
+			<NestedAccordion {routes} />
 		</Accordion.Root>
 	</nav>
 </div>

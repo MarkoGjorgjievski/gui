@@ -2,14 +2,10 @@
 	import { accounts, mails, profiles } from './data.js';
 	import Mail from './(components)/mail.svelte';
 	export let data;
+
+	console.log(data);
 </script>
 
-<Mail
-	{accounts}
-	{mails}
-	defaultLayout={data.layout}
-	defaultCollapsed={data.collapsed}
-	navCollapsedSize={15}
->
+<!-- <Mail defaultLayout={data.layout} defaultCollapsed={data.collapsed} navCollapsedSize={15} routes={data.tree}>
 	<slot />
-</Mail>
+</Mail> -->

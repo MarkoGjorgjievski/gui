@@ -2,12 +2,13 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	import type { Route } from '../config.js';
+	// import type { Route } from '../config.js';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import NestedAccordion from './nested-accordion.svelte';
+	import type { DirectoryTree } from 'directory-tree';
 
 	export let isCollapsed: boolean;
-	export let routes: Route[];
+	export let routes: DirectoryTree[] | undefined;
 </script>
 
 <div data-collapsed={isCollapsed} class="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">

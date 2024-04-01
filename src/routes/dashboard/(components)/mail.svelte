@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AccountSwitcher from './account-switcher.svelte';
-	import { primaryRoutes, secondaryRoutes } from '../config.js';
+	// import { primaryRoutes, secondaryRoutes } from '../config.js';
 	import MailDisplay from './mail-display.svelte';
 	import MailList from './mail-list.svelte';
 	import Nav from './nav.svelte';
@@ -13,9 +13,12 @@
 	import Search from 'lucide-svelte/icons/search';
 	import type { Account, Mail } from '../data.js';
 	import QuickSearch from './quick-search.svelte';
+	import type { DirectoryTree } from 'directory-tree';
+	// import type { Route } from '../config';
 
-	export let accounts: Account[];
-	export let mails: Mail[];
+	// export let accounts: Account[];
+	// export let mails: Mail[];
+	export let routes: DirectoryTree[] | undefined;
 	export let defaultLayout = [265, 440, 655];
 	export let defaultCollapsed = false;
 	export let navCollapsedSize: number;
@@ -52,14 +55,14 @@
 		{onExpand}
 	>
 		<div class={cn('flex h-[52px] items-center justify-center', isCollapsed ? 'h-[52px]' : 'px-2')}>
-			<AccountSwitcher {isCollapsed} {accounts} />
+			<!-- <AccountSwitcher {isCollapsed} {accounts} /> -->
 		</div>
 		<Separator />
 		Here something
 		<Separator />
-		<Nav {isCollapsed} routes={primaryRoutes} />
+		<Nav {isCollapsed} {routes} />
 		<Separator />
-		<Nav {isCollapsed} routes={secondaryRoutes} />
+		<Nav {isCollapsed} {routes} />
 	</Resizable.Pane>
 	<Resizable.Handle withHandle />
 	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30}>
@@ -84,10 +87,10 @@
 			</div>
 
 			<Tabs.Content value="all" class="m-0">
-				<MailList items={mails} />
+				<!-- <MailList items={mails} /> -->
 			</Tabs.Content>
 			<Tabs.Content value="unread" class="m-0">
-				<MailList items={mails.filter((item) => !item.read)} />
+				<!-- <MailList items={mails.filter((item) => !item.read)} /> -->
 			</Tabs.Content>
 		</Tabs.Root>
 	</Resizable.Pane>

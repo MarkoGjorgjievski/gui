@@ -1,28 +1,30 @@
 <script lang="ts">
-	import * as Accordion from '$lib/components/ui/accordion/index.js';
-	import { type Route } from '../config';
+	import * as NestedAccordion from '$lib/components/ui/nested-accordion/index.js';
+	import { cn } from '$lib/utils';
+	import type { DirectoryTree } from 'directory-tree';
+	// import { type Route } from '../config';
 
-	export let routes: Route[] | undefined = undefined;
+	export let routes: DirectoryTree[] | undefined = undefined;
 </script>
 
 {#if routes}
 	{#each routes as route}
-		{#if route.routes}
-			<Accordion.Item value="item-{route.title}">
-				<Accordion.Trigger class="pt-px">
+		{#if route.children}
+			<NestedAccordion.Item value="item-{route.name}">
+				<NestedAccordion.Trigger>
 					<span class="flex items-center gap-1">
 						<!-- <svelte:component this={icon} class="mr-2 size-4" aria-hidden="true" /> -->
-						{route.title}
+						{route.name}
 					</span>
-				</Accordion.Trigger>
-				<Accordion.Content class="pl-4">
-					<svelte:self routes={route.routes} />
-				</Accordion.Content>
-			</Accordion.Item>
+				</NestedAccordion.Trigger>
+				<NestedAccordion.Content class="is-open group pl-5">
+					<svelte:self routes={route.children} />
+				</NestedAccordion.Content>
+			</NestedAccordion.Item>
 		{:else}
-			<div class="py-1 pl-2.5 text-sm">
-				{route.title}
-			</div>
+			<p class="py-1 pl-2 text-sm group-[.is-open]:pl-5">
+				{route.name}
+			</p>
 		{/if}
 	{/each}
 {/if}

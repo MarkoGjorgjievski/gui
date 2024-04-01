@@ -9,7 +9,7 @@
 	{mails}
 	defaultLayout={data.layout}
 	defaultCollapsed={data.collapsed}
-	navCollapsedSize={4}
+	navCollapsedSize={15}
 >
 	<slot />
 </Mail>

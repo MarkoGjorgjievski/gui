@@ -26,10 +26,10 @@
 		document.cookie = `PaneForge:layout=${JSON.stringify(sizes)}`;
 	}
 
-	function onCollapse() {
-		isCollapsed = true;
-		document.cookie = `PaneForge:collapsed=${true}`;
-	}
+	// function onCollapse() {
+	// 	isCollapsed = true;
+	// 	document.cookie = `PaneForge:collapsed=${true}`;
+	// }
 
 	function onExpand() {
 		isCollapsed = false;
@@ -48,12 +48,14 @@
 		collapsible
 		minSize={15}
 		maxSize={20}
-		{onCollapse}
+		onCollapse={() => null}
 		{onExpand}
 	>
 		<div class={cn('flex h-[52px] items-center justify-center', isCollapsed ? 'h-[52px]' : 'px-2')}>
 			<AccountSwitcher {isCollapsed} {accounts} />
 		</div>
+		<Separator />
+		Here something
 		<Separator />
 		<Nav {isCollapsed} routes={primaryRoutes} />
 		<Separator />
@@ -80,7 +82,7 @@
 					</div>
 				</form>
 			</div>
-			
+
 			<Tabs.Content value="all" class="m-0">
 				<MailList items={mails} />
 			</Tabs.Content>

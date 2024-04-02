@@ -9,7 +9,7 @@
 
 <Mail
 	{accounts}
-	routes={data.tree.children}
+	routes={data.routes.children}
 	defaultLayout={data.layout}
 	defaultCollapsed={data.collapsed}
 	navCollapsedSize={15}

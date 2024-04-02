@@ -15,12 +15,14 @@
 	import type { Account, Mail } from '../data.js';
 	import QuickSearch from './quick-search.svelte';
 	import type { DirectoryTree } from 'directory-tree';
+	import { page } from '$app/stores';
 	// import type { Route } from '../config';
 
 	export let accounts: Account[];
 	// export let mails: Mail[];
 	export let routes: DirectoryTree[] | undefined;
-	export let defaultLayout = [265, 440, 655];
+	// export let defaultLayout = [265, 440, 655];
+	export let defaultLayout = [265, 655, 655];
 	export let defaultCollapsed = false;
 	export let navCollapsedSize: number;
 
@@ -39,6 +41,10 @@
 		isCollapsed = false;
 		document.cookie = `PaneForge:collapsed=${false}`;
 	}
+
+	const [library, orgs] = routes || [];
+
+	$: console.log($page.url.pathname);
 </script>
 
 <Resizable.PaneGroup
@@ -59,9 +65,9 @@
 			<AccountSwitcher {isCollapsed} {accounts} />
 		</div>
 		<Separator />
-		<Nav {isCollapsed} {routes} />
+		<Nav {isCollapsed} routes={library.children} title={library.name} />
 		<Separator />
-		<Nav {isCollapsed} {routes} />
+		<Nav {isCollapsed} routes={orgs.children} title={orgs.name} />
 	</Resizable.Pane>
 	<Resizable.Handle />
 	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30}>
@@ -109,9 +115,9 @@
 			</Tabs.Content>
 		</Tabs.Root>
 	</Resizable.Pane>
-	<Resizable.Handle withHandle />
-	<Resizable.Pane defaultSize={defaultLayout[2]}>
+	<Resizable.Handle />
+	<!-- <Resizable.Pane defaultSize={defaultLayout[2]}>
 		<slot />
-		<!-- <MailDisplay mail={mails.find((item) => item.id === $mailStore.selected) || null} /> -->
-	</Resizable.Pane>
+		<MailDisplay mail={mails.find((item) => item.id === $mailStore.selected) || null} />
+	</Resizable.Pane> -->
 </Resizable.PaneGroup>

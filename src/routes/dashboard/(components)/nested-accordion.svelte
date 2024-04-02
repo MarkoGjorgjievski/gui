@@ -1,14 +1,26 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import * as NestedAccordion from '$lib/components/ui/nested-accordion/index.js';
 	import { cn } from '$lib/utils';
 	import type { DirectoryTree } from 'directory-tree';
 	// import { type Route } from '../config';
 
 	export let routes: DirectoryTree[] | undefined = undefined;
+
+	const onClick = (path: string) => {
+		console.log(path);
+		const p = path.split('\\');
+		const url = new URL(`http://localhost:5173/${p.slice(2, p.length - 1).join('/')}`);
+		url.searchParams.set('file', p[p.length - 1]);
+		goto(url);
+	};
 </script>
 
 {#if routes}
 	{#each routes as route}
+		<!-- {@const p = route.path.split('\\')}
+		{@const path = `/${p.slice(2, p.length - 1).join('/')}`} -->
 		{#if route.children}
 			<NestedAccordion.Item value="item-{route.name}">
 				<NestedAccordion.Trigger>
@@ -22,9 +34,10 @@
 				</NestedAccordion.Content>
 			</NestedAccordion.Item>
 		{:else}
-			<p class="py-1 pl-2 text-sm group-[.is-open]:pl-5">
+			<button on:click={() => onClick(route.path)} class="flex">
 				{route.name}
-			</p>
+			</button>
+			<!-- <a href={path}>{route.name}</a> -->
 		{/if}
 	{/each}
 {/if}

@@ -3,7 +3,6 @@
 	import SinglePageForm from './single-page-form.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	export let data: PageData;
-	console.log(data);
 </script>
 
 <div class="space-y-6">

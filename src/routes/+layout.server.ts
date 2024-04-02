@@ -1,8 +1,12 @@
-// import type { LayoutData } from './$types.js';
 import type { LayoutServerLoad } from './$types.js';
 import dirTree from 'directory-tree';
 
-const tree = dirTree('src/routes/library');
+const tree = dirTree('src/routes');
+
+const routes = {
+	...tree,
+	children: tree.children?.filter((route) => route.name === 'library' || route.name === 'orgs')
+};
 
 export const load: LayoutServerLoad = async (event) => {
 	const layoutCookie = event.cookies.get('PaneForge:layout');
@@ -14,5 +18,5 @@ export const load: LayoutServerLoad = async (event) => {
 	layoutCookie && (layout = JSON.parse(layoutCookie));
 	collapsedCookie && (collapsed = JSON.parse(collapsedCookie));
 
-	return { layout, collapsed, tree: { path: tree.path, name: tree.name, children: tree.children } };
+	return { layout, collapsed, routes };
 };

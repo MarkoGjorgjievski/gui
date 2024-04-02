@@ -10,13 +10,14 @@
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import { Separator } from '$lib/components/ui/select/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import * as TabNav from '$lib/components/ui/tab-nav/index.js';
 	import Search from 'lucide-svelte/icons/search';
 	import type { Account, Mail } from '../data.js';
 	import QuickSearch from './quick-search.svelte';
 	import type { DirectoryTree } from 'directory-tree';
 	// import type { Route } from '../config';
 
-	// export let accounts: Account[];
+	export let accounts: Account[];
 	// export let mails: Mail[];
 	export let routes: DirectoryTree[] | undefined;
 	export let defaultLayout = [265, 440, 655];
@@ -55,16 +56,14 @@
 		{onExpand}
 	>
 		<div class={cn('flex h-[52px] items-center justify-center', isCollapsed ? 'h-[52px]' : 'px-2')}>
-			<!-- <AccountSwitcher {isCollapsed} {accounts} /> -->
+			<AccountSwitcher {isCollapsed} {accounts} />
 		</div>
-		<Separator />
-		Here something
 		<Separator />
 		<Nav {isCollapsed} {routes} />
 		<Separator />
 		<Nav {isCollapsed} {routes} />
 	</Resizable.Pane>
-	<Resizable.Handle withHandle />
+	<Resizable.Handle />
 	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30}>
 		<Tabs.Root value="all">
 			<div class="flex items-center px-4 py-2">
@@ -76,15 +75,31 @@
 					</Tabs.Trigger>
 				</Tabs.List>
 			</div>
-			<Separator />
-			<div class="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+
+			<TabNav.Root value="singleYAML">
+				<div class="py-[5px]">
+					<TabNav.List class="ml-auto">
+						<TabNav.Trigger value="singleYAML" class="text-zinc-600 dark:text-zinc-200"
+							>singleYAML</TabNav.Trigger
+						>
+						<TabNav.Trigger value="multiYAML" class="text-zinc-600 dark:text-zinc-200">
+							multiYAML
+						</TabNav.Trigger>
+					</TabNav.List>
+				</div>
+
+				<TabNav.Content value="singleYAML" class="m-0">singleYAML</TabNav.Content>
+				<TabNav.Content value="multiYAML" class="m-0">multiYAML</TabNav.Content>
+			</TabNav.Root>
+
+			<!-- <div class="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 				<form>
 					<div class="relative">
 						<Search class="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
 						<Input placeholder="Search" class="pl-8" />
 					</div>
 				</form>
-			</div>
+			</div> -->
 
 			<Tabs.Content value="all" class="m-0">
 				<!-- <MailList items={mails} /> -->

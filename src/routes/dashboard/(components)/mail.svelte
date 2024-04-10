@@ -18,6 +18,7 @@
 	import type { DirectoryTree } from 'directory-tree';
 	import { page } from '$app/stores';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
+	import { goto } from '$app/navigation';
 	// import type { Route } from '../config';
 
 	export let accounts: Account[];
@@ -52,6 +53,16 @@
 
 	// $: console.log("activeFolder", activeFolder())
 
+	const onClick = (file: string) => {
+		const newUrl = new URL($page.url);
+		newUrl?.searchParams?.set('file', file);
+		goto(newUrl);
+	};
+
+	$: console.log(
+		$page.url.searchParams.getAll('folder')[0].replace('%2B', '+').split(/<|>/).filter(Boolean)
+	);
+
 	const [library, orgs] = routes || [];
 </script>
 
@@ -82,33 +93,26 @@
 		<div class="flex items-center p-4">
 			<Breadcrumbs />
 		</div>
-		{#if $page.url.searchParams.get('file')}
-			<TabNav.Root value={$page.url.searchParams.get('file') || ''} class="items-stretc h-full">
-				<div class="pt-[5px]">
-					<TabNav.List class="ml-auto">
-						{#each $page.url.searchParams
-							.getAll('folder')[0]
-							.replace('%2B', '+')
-							.split(/<|>/)
-							.filter(Boolean) as searchParam}
-							<TabNav.Trigger value={searchParam} class="text-zinc-600 dark:text-zinc-200"
-								>{searchParam}</TabNav.Trigger
-							>
-						{/each}
-					</TabNav.List>
-				</div>
-				<TabNav.Content
-					value={$page.url.searchParams.get('file') || ''}
-					class="m-0 flex h-full flex-col"
-				>
-					<ScrollArea orientation="vertical" class="h-full">
-						<div class="mb-24 p-8">
-							<slot />
-						</div>
-					</ScrollArea>
-				</TabNav.Content>
-			</TabNav.Root>
-		{/if}
+		<TabNav.Root value="index" class="w-full">
+			<TabNav.List class="w-full">
+				<TabNav.List class="ml-auto">
+					{#each $page.url.searchParams
+						.getAll('folder')[0]
+						.replace('%2B', '+')
+						.split(/<|>/)
+						.filter(Boolean) as searchParam}
+						<TabNav.Trigger value={searchParam} on:click={() => onClick(searchParam)}
+							>{searchParam}</TabNav.Trigger
+						>
+					{/each}
+				</TabNav.List>
+			</TabNav.List>
+			<TabNav.Content value="index.js">index.js</TabNav.Content>
+			<TabNav.Content value="+layout.svelte">+layout.svelte</TabNav.Content>
+			<TabNav.Content value="+page.server.ts">+page.server.ts</TabNav.Content>
+			<TabNav.Content value="+page.svelte">+page.svelte</TabNav.Content>
+			<TabNav.Content value="singlePage.yaml">singlePage.yaml</TabNav.Content>
+		</TabNav.Root>
 	</Resizable.Pane>
 	<Resizable.Handle />
 	<Resizable.Pane defaultSize={defaultLayout[2]} maxSize={30}>

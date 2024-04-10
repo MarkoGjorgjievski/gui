@@ -44,14 +44,15 @@
 				</NestedAccordion.Content>
 			</NestedAccordion.Item>
 		{:else}
-			<Button on:click={() => onClick(route, routes)} variant="link">
-				<svelte:component
-					this={route.name ? iconMapper.get(route.name.split('.')[1]) : Icon.JS}
-					class="mr-1 mt-px size-4"
-				/>
-				{route.name}
-			</Button>
-			<!-- <a href={path}>{route.name}</a> -->
+			<div>
+				<Button on:click={() => onClick(route, routes)} variant="link">
+					<svelte:component
+						this={route.name ? iconMapper.get(route.name.split('.')[1]) : Icon.JS}
+						class="mr-1 mt-px size-4"
+					/>
+					{route.name}
+				</Button>
+			</div>
 		{/if}
 	{/each}
 {/if}

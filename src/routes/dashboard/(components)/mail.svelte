@@ -26,6 +26,7 @@
 	import { buttonVariants } from '$lib/components/ui/button';
 	import * as Icons from '../icons.js';
 	import * as Icon from '../(components)/icons';
+	import JSPlayground from '../(components)/js-playground.svelte';
 
 	export let accounts: Account[];
 	export let mails: Mail[];
@@ -84,7 +85,7 @@
 		<Nav {isCollapsed} routes={orgs.children} title={orgs.name} />
 	</Resizable.Pane>
 	<Resizable.Handle />
-	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30} maxSize={55}>
+	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30} maxSize={65}>
 		<div class="mb-1 flex items-center justify-between px-4 py-2">
 			<Breadcrumbs />
 			<Tooltip.Root openDelay={0} group>
@@ -117,9 +118,7 @@
 					</TabNav.List>
 				</TabNav.List>
 				<TabNav.Content value="index.js"><IndexForm data={forms.indexForm} /></TabNav.Content>
-				<TabNav.Content value="+layout.svelte">+layout.svelte</TabNav.Content>
-				<TabNav.Content value="+page.server.ts">+page.server.ts</TabNav.Content>
-				<TabNav.Content value="+page.svelte">+page.svelte</TabNav.Content>
+				<TabNav.Content value="transform.js"><JSPlayground /></TabNav.Content>
 				<TabNav.Content value="singlePage.yaml"
 					><SinglePageForm data={forms.singlePageForm} /></TabNav.Content
 				>

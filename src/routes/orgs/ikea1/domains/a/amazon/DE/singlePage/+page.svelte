@@ -4,5 +4,4 @@
 	export let data;
 </script>
 
-<!-- <SinglePageForm data={data.form} /> -->
-<slot />
+<SinglePageForm data={data.form} />

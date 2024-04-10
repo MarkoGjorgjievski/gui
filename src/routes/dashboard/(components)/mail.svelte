@@ -19,7 +19,13 @@
 	import { page } from '$app/stores';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { goto } from '$app/navigation';
-	// import type { Route } from '../config';
+	import SinglePageForm from './forms/single-page-form.svelte';
+	import IndexForm from '../settings/index-form.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip/index';
+	import { buttonVariants } from '$lib/components/ui/button';
+	import * as Icons from '../icons.js';
+	import * as Icon from '../(components)/icons';
 
 	export let accounts: Account[];
 	export let mails: Mail[];
@@ -28,6 +34,7 @@
 	// export let defaultLayout = [265, 655, 655];
 	export let defaultCollapsed = false;
 	export let navCollapsedSize: number;
+	export let forms;
 
 	let isCollapsed = defaultCollapsed;
 
@@ -35,23 +42,10 @@
 		document.cookie = `PaneForge:layout=${JSON.stringify(sizes)}`;
 	}
 
-	// function onCollapse() {
-	//  isCollapsed = true;
-	//  document.cookie = `PaneForge:collapsed=${true}`;
-	// }
-
 	function onExpand() {
 		isCollapsed = false;
 		document.cookie = `PaneForge:collapsed=${false}`;
 	}
-
-	// $: console.log(routes, "routes")
-
-	// $: console.log($page.url.pathname);
-	// $: console.log($page.url.searchParams.get('file'));
-	// const activeFolder = (): string => $page.url.searchParams.get('file') ? routes?.find(route => route.path === $page.url.pathname) ? activeFolder() : routes.map(route => route.children?.find(child => child.path === $page.url.pathname))
-
-	// $: console.log("activeFolder", activeFolder())
 
 	const onClick = (file: string) => {
 		const newUrl = new URL($page.url);
@@ -59,9 +53,10 @@
 		goto(newUrl);
 	};
 
-	$: console.log(
-		$page.url.searchParams.getAll('folder')[0].replace('%2B', '+').split(/<|>/).filter(Boolean)
-	);
+	const iconMapper = new Map([
+		['js', Icon.JS],
+		['yaml', Icon.YAML]
+	]);
 
 	const [library, orgs] = routes || [];
 </script>
@@ -90,29 +85,46 @@
 	</Resizable.Pane>
 	<Resizable.Handle />
 	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30} maxSize={55}>
-		<div class="flex items-center p-4">
+		<div class="mb-1 flex items-center justify-between px-4 py-2">
 			<Breadcrumbs />
+			<Tooltip.Root openDelay={0} group>
+				<Tooltip.Trigger
+					id="save_tooltip"
+					class={buttonVariants({ variant: 'outline', size: 'icon' })}
+				>
+					<Icons.Save class="size-4" />
+					<span class="sr-only">Save</span>
+				</Tooltip.Trigger>
+				<Tooltip.Content>Save</Tooltip.Content>
+			</Tooltip.Root>
 		</div>
-		<TabNav.Root value="index" class="w-full">
-			<TabNav.List class="w-full">
-				<TabNav.List class="ml-auto">
-					{#each $page.url.searchParams
-						.getAll('folder')[0]
-						.replace('%2B', '+')
-						.split(/<|>/)
-						.filter(Boolean) as searchParam}
-						<TabNav.Trigger value={searchParam} on:click={() => onClick(searchParam)}
-							>{searchParam}</TabNav.Trigger
-						>
-					{/each}
+		{#if $page.url.searchParams.toString().length}
+			<TabNav.Root value={$page.url.searchParams.get('file') || 'index.js'} class="mt-1">
+				<TabNav.List class="mt-px w-full">
+					<TabNav.List class="ml-auto">
+						{#each $page.url.searchParams
+							.getAll('folder')[0]
+							.replace('%2B', '+')
+							.split(/<|>/)
+							.filter(Boolean) as file}
+							<TabNav.Trigger value={file} on:click={() => onClick(file)}>
+								<svelte:component
+									this={file ? iconMapper.get(file.split('.')[1]) : Icon.JS}
+									class="mr-1 mt-px size-4"
+								/>{file}</TabNav.Trigger
+							>
+						{/each}
+					</TabNav.List>
 				</TabNav.List>
-			</TabNav.List>
-			<TabNav.Content value="index.js">index.js</TabNav.Content>
-			<TabNav.Content value="+layout.svelte">+layout.svelte</TabNav.Content>
-			<TabNav.Content value="+page.server.ts">+page.server.ts</TabNav.Content>
-			<TabNav.Content value="+page.svelte">+page.svelte</TabNav.Content>
-			<TabNav.Content value="singlePage.yaml">singlePage.yaml</TabNav.Content>
-		</TabNav.Root>
+				<TabNav.Content value="index.js"><IndexForm data={forms.indexForm} /></TabNav.Content>
+				<TabNav.Content value="+layout.svelte">+layout.svelte</TabNav.Content>
+				<TabNav.Content value="+page.server.ts">+page.server.ts</TabNav.Content>
+				<TabNav.Content value="+page.svelte">+page.svelte</TabNav.Content>
+				<TabNav.Content value="singlePage.yaml"
+					><SinglePageForm data={forms.singlePageForm} /></TabNav.Content
+				>
+			</TabNav.Root>
+		{/if}
 	</Resizable.Pane>
 	<Resizable.Handle />
 	<Resizable.Pane defaultSize={defaultLayout[2]} maxSize={30}>

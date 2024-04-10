@@ -21,3 +21,4 @@ export { default as ArrowUpFromLine } from 'lucide-svelte/icons/arrow-up-from-li
 export { default as ArrowDownFromLine } from 'lucide-svelte/icons/arrow-down-to-line';
 export { default as GitCommitVertical } from 'lucide-svelte/icons/git-commit-vertical';
 export { default as GitMerge } from 'lucide-svelte/icons/git-merge';
+export { default as Save } from 'lucide-svelte/icons/save';

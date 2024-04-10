@@ -4,11 +4,18 @@
 	import * as NestedAccordion from '$lib/components/ui/nested-accordion/index.js';
 	import { cn } from '$lib/utils';
 	import type { DirectoryTree } from 'directory-tree';
-	// import { type Route } from '../config';
+	import * as Icon from '../(components)/icons';
+	import { Button } from '$lib/components/ui/button';
 
 	export let routes: DirectoryTree[] | undefined = undefined;
 
+	const iconMapper = new Map([
+		['js', Icon.JS],
+		['yaml', Icon.YAML]
+	]);
+
 	const onClick = (route: DirectoryTree, routes: DirectoryTree[] | undefined) => {
+		console.log(route);
 		const p = route.path.split('\\');
 		const slice = p.slice(2, p.length - 1).join('/');
 		const url = new URL(`${$page.url.origin}/${slice}`);
@@ -37,9 +44,13 @@
 				</NestedAccordion.Content>
 			</NestedAccordion.Item>
 		{:else}
-			<button on:click={() => onClick(route, routes)} class="ml-2 block">
+			<Button on:click={() => onClick(route, routes)} variant="link">
+				<svelte:component
+					this={route.name ? iconMapper.get(route.name.split('.')[1]) : Icon.JS}
+					class="mr-1 mt-px size-4"
+				/>
 				{route.name}
-			</button>
+			</Button>
 			<!-- <a href={path}>{route.name}</a> -->
 		{/if}
 	{/each}

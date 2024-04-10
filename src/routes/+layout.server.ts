@@ -1,7 +1,12 @@
 import type { LayoutServerLoad } from './$types.js';
 import dirTree from 'directory-tree';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { indexSchema, singlePageSchema } from '$lib/schema.js';
 
-const tree = dirTree('src/routes');
+const tree = dirTree('src/routes', {
+	extensions: /\.(js|yaml)$/
+});
 
 const routes = {
 	...tree,
@@ -18,5 +23,13 @@ export const load: LayoutServerLoad = async (event) => {
 	layoutCookie && (layout = JSON.parse(layoutCookie));
 	collapsedCookie && (collapsed = JSON.parse(collapsedCookie));
 
-	return { layout, collapsed, routes };
+	return {
+		layout,
+		collapsed,
+		routes,
+		forms: {
+			indexForm: await superValidate(zod(indexSchema)),
+			singlePageForm: await superValidate(zod(singlePageSchema))
+		}
+	};
 };

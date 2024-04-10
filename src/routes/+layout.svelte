@@ -10,6 +10,7 @@
 <svelte:head><title>Import GUI</title></svelte:head>
 
 <Mail
+	forms={data.forms}
 	{mails}
 	{accounts}
 	routes={data.routes.children}

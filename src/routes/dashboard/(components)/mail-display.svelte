@@ -1,22 +1,12 @@
 <script lang="ts">
-	import { DateFormatter, getDayOfWeek, getLocalTimeZone, now } from '@internationalized/date';
-
-	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
-	import { Calendar } from '$lib/components/ui/calendar/index.js';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
-	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
-	import { Switch } from '$lib/components/ui/switch/index.js';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	import type { Mail } from '../data.js';
 	import * as Icons from '../icons.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-
-	export let mail: Mail | null = null;
+	import * as Card from '$lib/components/ui/card/index.js';
+	import { Progress } from '$lib/components/ui/progress/index.js';
 
 	const branches = [
 		{ value: 'master', label: 'master' },
@@ -33,7 +23,6 @@
 				<Tooltip.Trigger
 					id="run_local_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
 				>
 					<Icons.CirclePlay class="size-4" />
 					<span class="sr-only">Run Local</span>
@@ -44,7 +33,6 @@
 				<Tooltip.Trigger
 					id="run_remote_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
 				>
 					<Icons.Play class="size-4" />
 					<span class="sr-only">Run Remote</span>
@@ -55,7 +43,6 @@
 				<Tooltip.Trigger
 					id="deploy_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
 				>
 					<Icons.Rocket class="size-4" />
 					<span class="sr-only">Deploy</span>
@@ -65,7 +52,35 @@
 		</div>
 	</div>
 	<Separator />
-	<div class="h-full">data.json</div>
+	<div class="h-full p-4">
+		<Card.Root>
+			<div class="flex justify-between pb-2">
+				<Card.Header class="pb-2">
+					<Card.Description>Total</Card.Description>
+					<Card.Title class="text-lg">1000</Card.Title>
+				</Card.Header>
+				<Card.Header class="pb-2">
+					<Card.Description>Successful</Card.Description>
+					<Card.Title class="text-lg">998</Card.Title>
+				</Card.Header>
+				<Card.Header class="pb-2">
+					<Card.Description>Failed</Card.Description>
+					<Card.Title class="text-lg text-red-300">2</Card.Title>
+				</Card.Header>
+			</div>
+			<Card.Content>
+				<div class="flex items-center justify-between gap-1 text-xs text-muted-foreground">
+					12/12 completed stages
+					<Button size="sm" variant="link"
+						>See extractor <Icons.ExternalLink class="ml-1 size-4" /></Button
+					>
+				</div>
+			</Card.Content>
+			<Card.Footer>
+				<Progress value={98} aria-label="12% increase" class="h-1" />
+			</Card.Footer>
+		</Card.Root>
+	</div>
 	<Separator />
 	<div class="mb-1 flex items-center px-4 py-2">
 		<Icons.Github class="size-4" />
@@ -89,7 +104,6 @@
 				<Tooltip.Trigger
 					id="pull_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
 				>
 					<Icons.ArrowDownFromLine class="size-4" />
 					<span class="sr-only">Pull</span>
@@ -100,7 +114,6 @@
 				<Tooltip.Trigger
 					id="update_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
 				>
 					<Icons.GitMerge class="size-4" />
 					<span class="sr-only">Merge</span>
@@ -111,7 +124,6 @@
 				<Tooltip.Trigger
 					id="push_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
 				>
 					<Icons.ArrowUpFromLine class="size-4" />
 					<span class="sr-only">Push</span>

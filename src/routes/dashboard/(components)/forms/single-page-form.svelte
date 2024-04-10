@@ -176,7 +176,7 @@
 		</Button>
 	</div> -->
 
-		<Form.Button>Update profile</Form.Button>
+		<!-- <Form.Button>Update profile</Form.Button> -->
 	</form>
 
 	{#if browser}

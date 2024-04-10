@@ -22,3 +22,7 @@ export { default as ArrowDownFromLine } from 'lucide-svelte/icons/arrow-down-to-
 export { default as GitCommitVertical } from 'lucide-svelte/icons/git-commit-vertical';
 export { default as GitMerge } from 'lucide-svelte/icons/git-merge';
 export { default as Save } from 'lucide-svelte/icons/save';
+export { default as Info } from 'lucide-svelte/icons/info';
+export { default as TriangleAlert } from 'lucide-svelte/icons/triangle-alert';
+export { default as CircleCheck } from 'lucide-svelte/icons/circle-check';
+export { default as ExternalLink } from 'lucide-svelte/icons/external-link';

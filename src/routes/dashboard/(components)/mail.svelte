@@ -27,6 +27,8 @@
 	import * as Icons from '../icons.js';
 	import * as Icon from '../(components)/icons';
 	import JSPlayground from '../(components)/js-playground.svelte';
+	import TabNavContent from './tab-nav-content.svelte';
+	import { dataJSONSchema } from '$lib/schema';
 
 	export let accounts: Account[];
 	export let mails: Mail[];
@@ -62,11 +64,7 @@
 	const [library, orgs] = routes || [];
 </script>
 
-<Resizable.PaneGroup
-	direction="horizontal"
-	{onLayoutChange}
-	class="max-h-screen min-h-screen items-stretch"
->
+<Resizable.PaneGroup direction="horizontal" {onLayoutChange} class="h-screen">
 	<Resizable.Pane
 		defaultSize={defaultLayout[0]}
 		collapsedSize={navCollapsedSize}
@@ -85,7 +83,12 @@
 		<Nav {isCollapsed} routes={orgs.children} title={orgs.name} />
 	</Resizable.Pane>
 	<Resizable.Handle />
-	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30} maxSize={65}>
+	<Resizable.Pane
+		defaultSize={defaultLayout[1]}
+		minSize={30}
+		maxSize={65}
+		class="max-h-screen min-h-screen"
+	>
 		<div class="mb-1 flex items-center justify-between px-4 py-2">
 			<Breadcrumbs />
 			<Tooltip.Root openDelay={0} group>
@@ -117,16 +120,12 @@
 						{/each}
 					</TabNav.List>
 				</TabNav.List>
-				<TabNav.Content value="index.js"><IndexForm data={forms.indexForm} /></TabNav.Content>
-				<TabNav.Content value="transform.js"><JSPlayground /></TabNav.Content>
-				<TabNav.Content value="singlePage.yaml"
-					><SinglePageForm data={forms.singlePageForm} /></TabNav.Content
-				>
+				<TabNavContent {forms} />
 			</TabNav.Root>
 		{/if}
 	</Resizable.Pane>
 	<Resizable.Handle />
 	<Resizable.Pane defaultSize={defaultLayout[2]} maxSize={30}>
-		<MailDisplay mail={mails[0]} />
+		<MailDisplay mail={mails[0]} data={forms.dataJSONSchema} />
 	</Resizable.Pane>
 </Resizable.PaneGroup>

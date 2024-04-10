@@ -2,7 +2,7 @@ import type { LayoutServerLoad } from './$types.js';
 import dirTree from 'directory-tree';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { indexSchema, singlePageSchema } from '$lib/schema.js';
+import { indexSchema, singlePageSchema, dataJSONSchema } from '$lib/schema.js';
 
 const tree = dirTree('src/routes', {
 	extensions: /\.(js|yaml)$/
@@ -29,7 +29,8 @@ export const load: LayoutServerLoad = async (event) => {
 		routes,
 		forms: {
 			indexForm: await superValidate(zod(indexSchema)),
-			singlePageForm: await superValidate(zod(singlePageSchema))
+			singlePageForm: await superValidate(zod(singlePageSchema)),
+			dataJSONForm: await superValidate(zod(dataJSONSchema))
 		}
 	};
 };

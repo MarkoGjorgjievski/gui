@@ -192,3 +192,12 @@ export const singlePageSchema = z.object({
 });
 
 export type SinglePageSchema = typeof singlePageSchema;
+
+export const dataJSONSchema = z.object({
+	weight: z.string(),
+	weight_raw: z.string(),
+	weight_unit: z.string(),
+	width: z.string()
+});
+
+export type DataJSONSchema = typeof dataJSONSchema;

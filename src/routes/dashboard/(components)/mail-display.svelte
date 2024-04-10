@@ -13,173 +13,116 @@
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import type { Mail } from '../data.js';
 	import * as Icons from '../icons.js';
+	import * as Select from '$lib/components/ui/select/index.js';
+	import { Input } from '$lib/components/ui/input/index.js';
 
 	export let mail: Mail | null = null;
 
-	const fullFormatter = new DateFormatter('en-US', {
-		dateStyle: 'medium',
-		timeStyle: 'medium'
-	});
-
-	const relativeFormatter = new DateFormatter('en-US', {
-		weekday: 'short',
-		hour: '2-digit',
-		minute: '2-digit',
-		hourCycle: 'h12'
-	});
-	let todayDate = now(getLocalTimeZone());
-
-	function getClosestWeekend() {
-		const dayOfWeek = getDayOfWeek(todayDate, 'en-US');
-		if (dayOfWeek === 6) {
-			return todayDate.toDate();
-		}
-		return todayDate.add({ days: 6 - dayOfWeek }).toDate();
-	}
+	const branches = [
+		{ value: 'master', label: 'master' },
+		{ value: 'stubhub', label: 'stubhub' },
+		{ value: 'ddf-100', label: 'DDF-100' }
+	];
 </script>
 
-<div class="flex flex-col">
-	<div class="mb-1 flex items-center p-2">
+<div class="flex h-full flex-col">
+	<div class="mb-1 flex items-center px-4 py-2">
+		<h2 class="mr-auto text-sm font-semibold">Deployment</h2>
 		<div class="flex items-center gap-2">
 			<Tooltip.Root openDelay={0} group>
 				<Tooltip.Trigger
-					id="archive_tooltip"
+					id="run_local_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
 					disabled={!mail}
 				>
-					<Icons.Archive class="size-4" />
-					<span class="sr-only">Archive</span>
+					<Icons.CirclePlay class="size-4" />
+					<span class="sr-only">Run Local</span>
 				</Tooltip.Trigger>
-				<Tooltip.Content>Archive</Tooltip.Content>
+				<Tooltip.Content>Run Local</Tooltip.Content>
 			</Tooltip.Root>
 			<Tooltip.Root openDelay={0} group>
 				<Tooltip.Trigger
-					id="move_to_junk_tooltip"
+					id="run_remote_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
 					disabled={!mail}
 				>
-					<Icons.ArchiveX class="size-4" />
-					<span class="sr-only">Move to junk</span>
+					<Icons.Play class="size-4" />
+					<span class="sr-only">Run Remote</span>
 				</Tooltip.Trigger>
-				<Tooltip.Content>Move to junk</Tooltip.Content>
+				<Tooltip.Content>Run Remote</Tooltip.Content>
 			</Tooltip.Root>
 			<Tooltip.Root openDelay={0} group>
 				<Tooltip.Trigger
-					id="move_to_trash_tooltip"
+					id="deploy_tooltip"
 					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
 					disabled={!mail}
 				>
-					<Icons.Trash2 class="size-4" />
-					<span class="sr-only">Move to trash</span>
+					<Icons.Rocket class="size-4" />
+					<span class="sr-only">Deploy</span>
 				</Tooltip.Trigger>
-				<Tooltip.Content>Move to trash</Tooltip.Content>
-			</Tooltip.Root>
-			<Separator orientation="vertical" class="mx-1 h-6" />
-			<Tooltip.Root openDelay={0} group>
-				<Popover.Root portal={null}>
-					<Tooltip.Trigger asChild let:builder={tooltip_builder} id="snooze_popover">
-						<Popover.Trigger asChild let:builder={popover_builder} id="snooze_popover">
-							<Button
-								builders={[tooltip_builder, popover_builder]}
-								variant="ghost"
-								size="icon"
-								disabled={!mail}
-							>
-								<Icons.Clock class="size-4" />
-								<span class="sr-only">Snooze</span>
-							</Button>
-						</Popover.Trigger>
-					</Tooltip.Trigger>
-					<Popover.Content class="flex w-[535px] p-0">
-						<div class="flex flex-col gap-2 border-r px-2 py-4">
-							<div class="px-4 text-sm font-medium">Snooze until</div>
-							<div class="grid min-w-[250px] gap-1">
-								<Button variant="ghost" class="justify-start font-normal">
-									Later today
-									<span class="ml-auto text-muted-foreground">
-										{relativeFormatter.format(todayDate.add({ hours: 4 }).toDate())}
-									</span>
-								</Button>
-								<Button variant="ghost" class="justify-start font-normal">
-									Tomorrow
-									<span class="ml-auto text-muted-foreground">
-										{relativeFormatter.format(todayDate.add({ days: 1 }).toDate())}
-									</span>
-								</Button>
-								<Button variant="ghost" class="justify-start font-normal">
-									This weekend
-									<span class="ml-auto text-muted-foreground">
-										{relativeFormatter.format(getClosestWeekend())}
-									</span>
-								</Button>
-								<Button variant="ghost" class="justify-start font-normal">
-									Next week
-									<span class="ml-auto text-muted-foreground">
-										{relativeFormatter.format(todayDate.add({ weeks: 1 }).toDate())}
-									</span>
-								</Button>
-							</div>
-						</div>
-						<div class="p-2">
-							<Calendar bind:value={todayDate} initialFocus />
-						</div>
-					</Popover.Content>
-				</Popover.Root>
-				<Tooltip.Content>Snooze</Tooltip.Content>
+				<Tooltip.Content>Deploy</Tooltip.Content>
 			</Tooltip.Root>
 		</div>
-		<div class="ml-auto flex items-center gap-2">
-			<Tooltip.Root openDelay={0} group>
-				<Tooltip.Trigger
-					id="reply_tooltip"
-					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
-				>
-					<Icons.Reply class="size-4" />
-					<span class="sr-only">Reply</span>
-				</Tooltip.Trigger>
-				<Tooltip.Content>Reply</Tooltip.Content>
-			</Tooltip.Root>
-			<Tooltip.Root openDelay={0} group>
-				<Tooltip.Trigger
-					id="reply_all_tooltip"
-					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
-				>
-					<Icons.ReplyAll class="size-4" />
-					<span class="sr-only">Reply all</span>
-				</Tooltip.Trigger>
-				<Tooltip.Content>Reply all</Tooltip.Content>
-			</Tooltip.Root>
-			<Tooltip.Root openDelay={0} group>
-				<Tooltip.Trigger
-					id="forward_tooltip"
-					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-					disabled={!mail}
-				>
-					<Icons.Forward class="size-4" />
-					<span class="sr-only">Forward</span>
-				</Tooltip.Trigger>
-				<Tooltip.Content>Forward</Tooltip.Content>
-			</Tooltip.Root>
-		</div>
-		<Separator orientation="vertical" class="mx-2 h-6" />
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger
-				id="more_options_dropdown"
-				class={buttonVariants({ variant: 'ghost', size: 'icon' })}
-				disabled={!mail}
-			>
-				<Icons.EllipsisVertical class="size-4" />
-				<span class="sr-only">More</span>
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Content align="end">
-				<DropdownMenu.Item>Mark as unread</DropdownMenu.Item>
-				<DropdownMenu.Item>Star thread</DropdownMenu.Item>
-				<DropdownMenu.Item>Add label</DropdownMenu.Item>
-				<DropdownMenu.Item>Mute thread</DropdownMenu.Item>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
 	</div>
 	<Separator />
+	<div class="h-full">data.json</div>
+	<Separator />
+	<div class="mb-1 flex items-center px-4 py-2">
+		<Icons.Github class="size-4" />
+		<div class="ml-2 mr-auto">
+			<Select.Root portal={null}>
+				<Select.Trigger class="w-[120px]">
+					<Select.Value placeholder={branches[branches.length - 1].label} />
+				</Select.Trigger>
+				<Select.Content>
+					<Select.Group>
+						{#each branches as branch}
+							<Select.Item value={branch.value} label={branch.label}>{branch.label}</Select.Item>
+						{/each}
+					</Select.Group>
+				</Select.Content>
+				<Select.Input name="favoriteFruit" />
+			</Select.Root>
+		</div>
+		<div class="flex items-center gap-2">
+			<Tooltip.Root openDelay={0} group>
+				<Tooltip.Trigger
+					id="pull_tooltip"
+					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
+					disabled={!mail}
+				>
+					<Icons.ArrowDownFromLine class="size-4" />
+					<span class="sr-only">Pull</span>
+				</Tooltip.Trigger>
+				<Tooltip.Content>Pull</Tooltip.Content>
+			</Tooltip.Root>
+			<Tooltip.Root openDelay={0} group>
+				<Tooltip.Trigger
+					id="update_tooltip"
+					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
+					disabled={!mail}
+				>
+					<Icons.GitMerge class="size-4" />
+					<span class="sr-only">Merge</span>
+				</Tooltip.Trigger>
+				<Tooltip.Content>Merge</Tooltip.Content>
+			</Tooltip.Root>
+			<Tooltip.Root openDelay={0} group>
+				<Tooltip.Trigger
+					id="push_tooltip"
+					class={buttonVariants({ variant: 'ghost', size: 'icon' })}
+					disabled={!mail}
+				>
+					<Icons.ArrowUpFromLine class="size-4" />
+					<span class="sr-only">Push</span>
+				</Tooltip.Trigger>
+				<Tooltip.Content>Push</Tooltip.Content>
+			</Tooltip.Root>
+		</div>
+	</div>
+	<Separator />
+	<div class="flex flex-col gap-2 p-4">
+		<Input placeholder="Commit message" class="w-full" />
+		<Button variant="outline"><Icons.GitCommitVertical class="size-4" /> Commit</Button>
+	</div>
 </div>

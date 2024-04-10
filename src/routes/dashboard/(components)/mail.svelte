@@ -11,6 +11,7 @@
 	import { Separator } from '$lib/components/ui/select/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import * as TabNav from '$lib/components/ui/tab-nav/index.js';
+	import Breadcrumbs from './breadcrumbs.svelte';
 	import Search from 'lucide-svelte/icons/search';
 	import type { Account, Mail } from '../data.js';
 	import QuickSearch from './quick-search.svelte';
@@ -19,10 +20,10 @@
 	// import type { Route } from '../config';
 
 	export let accounts: Account[];
-	// export let mails: Mail[];
+	export let mails: Mail[];
 	export let routes: DirectoryTree[] | undefined;
-	// export let defaultLayout = [265, 440, 655];
-	export let defaultLayout = [265, 655, 655];
+	export let defaultLayout = [265, 440, 655];
+	// export let defaultLayout = [265, 655, 655];
 	export let defaultCollapsed = false;
 	export let navCollapsedSize: number;
 
@@ -33,8 +34,8 @@
 	}
 
 	// function onCollapse() {
-	// 	isCollapsed = true;
-	// 	document.cookie = `PaneForge:collapsed=${true}`;
+	//  isCollapsed = true;
+	//  document.cookie = `PaneForge:collapsed=${true}`;
 	// }
 
 	function onExpand() {
@@ -42,16 +43,18 @@
 		document.cookie = `PaneForge:collapsed=${false}`;
 	}
 
-	const [library, orgs] = routes || [];
+	// $: console.log(routes, "routes")
 
-	$: console.log($page.url.pathname);
+	// $: console.log($page.url.pathname);
+	// $: console.log($page.url.searchParams.get('file'));
+	// const activeFolder = (): string => $page.url.searchParams.get('file') ? routes?.find(route => route.path === $page.url.pathname) ? activeFolder() : routes.map(route => route.children?.find(child => child.path === $page.url.pathname))
+
+	// $: console.log("activeFolder", activeFolder())
+
+	const [library, orgs] = routes || [];
 </script>
 
-<Resizable.PaneGroup
-	direction="horizontal"
-	{onLayoutChange}
-	class="h-full max-h-[100vh] items-stretch"
->
+<Resizable.PaneGroup direction="horizontal" {onLayoutChange} class="min-h-[100vh] items-stretch">
 	<Resizable.Pane
 		defaultSize={defaultLayout[0]}
 		collapsedSize={navCollapsedSize}
@@ -70,54 +73,33 @@
 		<Nav {isCollapsed} routes={orgs.children} title={orgs.name} />
 	</Resizable.Pane>
 	<Resizable.Handle />
-	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30}>
-		<Tabs.Root value="all">
-			<div class="flex items-center px-4 py-2">
-				<h1 class="text-xl font-bold">Inbox</h1>
-				<Tabs.List class="ml-auto">
-					<Tabs.Trigger value="all" class="text-zinc-600 dark:text-zinc-200">All mail</Tabs.Trigger>
-					<Tabs.Trigger value="unread" class="text-zinc-600 dark:text-zinc-200">
-						Unread
-					</Tabs.Trigger>
-				</Tabs.List>
-			</div>
-
-			<TabNav.Root value="singleYAML">
+	<Resizable.Pane defaultSize={defaultLayout[1]} minSize={30} maxSize={55}>
+		<div class="flex items-center p-4">
+			<Breadcrumbs />
+		</div>
+		{#if $page.url.searchParams.get('file')}
+			<TabNav.Root value={$page.url.searchParams.get('file') || ''}>
 				<div class="py-[5px]">
 					<TabNav.List class="ml-auto">
-						<TabNav.Trigger value="singleYAML" class="text-zinc-600 dark:text-zinc-200"
-							>singleYAML</TabNav.Trigger
-						>
-						<TabNav.Trigger value="multiYAML" class="text-zinc-600 dark:text-zinc-200">
-							multiYAML
-						</TabNav.Trigger>
+						{#each $page.url.searchParams
+							.getAll('folder')[0]
+							.replace('%2B', '+')
+							.split(/<|>/)
+							.filter(Boolean) as searchParam}
+							<TabNav.Trigger value={searchParam} class="text-zinc-600 dark:text-zinc-200"
+								>{searchParam}</TabNav.Trigger
+							>
+						{/each}
 					</TabNav.List>
 				</div>
-
-				<TabNav.Content value="singleYAML" class="m-0">singleYAML</TabNav.Content>
-				<TabNav.Content value="multiYAML" class="m-0">multiYAML</TabNav.Content>
+				{#each $page.url.searchParams.getAll('folder') as searchParam}
+					<TabNav.Content value={searchParam} class="m-0">{searchParam}</TabNav.Content>
+				{/each}
 			</TabNav.Root>
-
-			<!-- <div class="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<form>
-					<div class="relative">
-						<Search class="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-						<Input placeholder="Search" class="pl-8" />
-					</div>
-				</form>
-			</div> -->
-
-			<Tabs.Content value="all" class="m-0">
-				<!-- <MailList items={mails} /> -->
-			</Tabs.Content>
-			<Tabs.Content value="unread" class="m-0">
-				<!-- <MailList items={mails.filter((item) => !item.read)} /> -->
-			</Tabs.Content>
-		</Tabs.Root>
+		{/if}
 	</Resizable.Pane>
 	<Resizable.Handle />
-	<!-- <Resizable.Pane defaultSize={defaultLayout[2]}>
-		<slot />
-		<MailDisplay mail={mails.find((item) => item.id === $mailStore.selected) || null} />
-	</Resizable.Pane> -->
+	<Resizable.Pane defaultSize={defaultLayout[2]} maxSize={30}>
+		<MailDisplay mail={mails[0]} />
+	</Resizable.Pane>
 </Resizable.PaneGroup>

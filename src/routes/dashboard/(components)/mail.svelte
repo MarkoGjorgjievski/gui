@@ -17,6 +17,7 @@
 	import QuickSearch from './quick-search.svelte';
 	import type { DirectoryTree } from 'directory-tree';
 	import { page } from '$app/stores';
+	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	// import type { Route } from '../config';
 
 	export let accounts: Account[];
@@ -54,7 +55,11 @@
 	const [library, orgs] = routes || [];
 </script>
 
-<Resizable.PaneGroup direction="horizontal" {onLayoutChange} class="min-h-[100vh] items-stretch">
+<Resizable.PaneGroup
+	direction="horizontal"
+	{onLayoutChange}
+	class="max-h-screen min-h-screen items-stretch"
+>
 	<Resizable.Pane
 		defaultSize={defaultLayout[0]}
 		collapsedSize={navCollapsedSize}
@@ -78,8 +83,8 @@
 			<Breadcrumbs />
 		</div>
 		{#if $page.url.searchParams.get('file')}
-			<TabNav.Root value={$page.url.searchParams.get('file') || ''}>
-				<div class="py-[5px]">
+			<TabNav.Root value={$page.url.searchParams.get('file') || ''} class="items-stretc h-full">
+				<div class="pt-[5px]">
 					<TabNav.List class="ml-auto">
 						{#each $page.url.searchParams
 							.getAll('folder')[0]
@@ -92,9 +97,16 @@
 						{/each}
 					</TabNav.List>
 				</div>
-				{#each $page.url.searchParams.getAll('folder') as searchParam}
-					<TabNav.Content value={searchParam} class="m-0">{searchParam}</TabNav.Content>
-				{/each}
+				<TabNav.Content
+					value={$page.url.searchParams.get('file') || ''}
+					class="m-0 flex h-full flex-col"
+				>
+					<ScrollArea orientation="vertical" class="h-full">
+						<div class="mb-24 p-8">
+							<slot />
+						</div>
+					</ScrollArea>
+				</TabNav.Content>
 			</TabNav.Root>
 		{/if}
 	</Resizable.Pane>

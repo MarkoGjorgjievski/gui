@@ -41,20 +41,28 @@
 	// }
 </script>
 
-<form method="POST" class="space-y-8" use:enhance id="profile-form">
-	<Form.Field {form} name="colour">
-		<Form.Control let:attrs>
-			<Form.Label>Results target</Form.Label>
-			<Input placeholder="0" {...attrs} bind:value={$formData.colour} type="number" />
-		</Form.Control>
-		<Form.Description>
-			Number of results after which the extracting stops. In case of pagination, a results target
-			must be set.
-		</Form.Description>
-		<Form.FieldErrors />
-	</Form.Field>
+<div class="space-y-6">
+	<div>
+		<h3 class="text-lg font-medium">Index</h3>
+		<p class="text-sm text-muted-foreground">
+			This is a shared configuration file for this extractor.
+		</p>
+	</div>
+	<Separator />
+	<form method="POST" class="space-y-8" use:enhance id="profile-form">
+		<Form.Field {form} name="colour">
+			<Form.Control let:attrs>
+				<Form.Label>Results target</Form.Label>
+				<Input placeholder="0" {...attrs} bind:value={$formData.colour} type="number" />
+			</Form.Control>
+			<Form.Description>
+				Number of results after which the extracting stops. In case of pagination, a results target
+				must be set.
+			</Form.Description>
+			<Form.FieldErrors />
+		</Form.Field>
 
-	<!-- <Form.Field {form} name="loadedSelector">
+		<!-- <Form.Field {form} name="loadedSelector">
 		<Form.Control let:attrs>
 			<Form.Label>
 				Loaded selector
@@ -168,9 +176,10 @@
 		</Button>
 	</div> -->
 
-	<Form.Button>Update profile</Form.Button>
-</form>
+		<Form.Button>Update profile</Form.Button>
+	</form>
 
-{#if browser}
-	<SuperDebug data={$formData} />
-{/if}
+	{#if browser}
+		<SuperDebug data={$formData} />
+	{/if}
+</div>

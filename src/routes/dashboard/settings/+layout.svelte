@@ -2,31 +2,30 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import SidebarNav from './(components)/sidebar-nav.svelte';
+	import MailHeader from '../(components)/mail-display.svelte';
 
 	const sidebarNavItems = [
 		{
-			title: 'Profile',
+			title: 'Index',
 			href: '/dashboard/settings'
 		},
 		{
-			title: 'Account',
-			href: '/dashboard/settings/account'
+			title: 'Goto 2',
+			href: '/dashboard/settings/goto2'
 		},
 		{
-			title: 'Appearance',
-			href: '/dashboard/settings/appearance'
+			title: 'Single page',
+			href: '/dashboard/settings/singlePage',
+			separator: 'before'
 		},
 		{
-			title: 'Notifications',
-			href: '/dashboard/settings/notifications'
-		},
-		{
-			title: 'Display',
-			href: '/dashboard/settings/display'
+			title: 'Multi pages',
+			href: '/dashboard/settings/multiPages'
 		}
 	];
 </script>
 
+<MailHeader />
 <div class="pb-xl max-w-4xl space-y-6 p-10">
 	<div class="space-y-0.5">
 		<h2 class="text-2xl font-bold tracking-tight">Settings</h2>
@@ -39,8 +38,8 @@
 			<SidebarNav items={sidebarNavItems} />
 		</aside>
 		<div class="w-full flex-1 lg:max-w-2xl">
-			<ScrollArea class="h-screen w-fit">
-				<slot />
+			<ScrollArea class="h-[74vh]">
+				<div class="pb-4 pl-0.5 pr-3"><slot /></div>
 			</ScrollArea>
 		</div>
 	</div>

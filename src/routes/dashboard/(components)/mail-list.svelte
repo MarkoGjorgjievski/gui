@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { cn } from "$lib/utils.js";
-	import { mailStore } from "../store.js";
-	import type { Mail } from "../data.js";
-	import { Badge } from "$lib/components/ui/badge/index.js";
-	import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-	import { formatTimeAgo } from "../utils.js";
+	import { cn } from '$lib/utils.js';
+	import { mailStore } from '../store.js';
+	import type { Mail } from '../data.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+	import { formatTimeAgo } from '../utils.js';
 
 	export let items: Mail[];
 
 	function get_badge_variant_from_label(label: string) {
-		if (["work"].includes(label.toLowerCase())) {
-			return "default";
+		if (['work'].includes(label.toLowerCase())) {
+			return 'default';
 		}
 
-		if (["personal"].includes(label.toLowerCase())) {
-			return "outline";
+		if (['personal'].includes(label.toLowerCase())) {
+			return 'outline';
 		}
 
-		return "secondary";
+		return 'secondary';
 	}
 </script>
 
@@ -26,8 +26,8 @@
 		{#each items as item}
 			<button
 				class={cn(
-					"flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-					$mailStore.selected === item.id && "bg-muted"
+					'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent',
+					$mailStore.selected === item.id && 'bg-muted'
 				)}
 				on:click={() => mailStore.setMail(item.id)}
 			>
@@ -41,10 +41,8 @@
 						</div>
 						<div
 							class={cn(
-								"ml-auto text-xs",
-								$mailStore.selected === item.id
-									? "text-foreground"
-									: "text-muted-foreground"
+								'ml-auto text-xs',
+								$mailStore.selected === item.id ? 'text-foreground' : 'text-muted-foreground'
 							)}
 						>
 							{formatTimeAgo(new Date(item.date))}

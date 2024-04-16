@@ -15,7 +15,6 @@
 	]);
 
 	const onClick = (route: DirectoryTree, routes: DirectoryTree[] | undefined) => {
-		console.log(route);
 		const p = route.path.split('\\');
 		const slice = p.slice(2, p.length - 1).join('/');
 		const url = new URL(`${$page.url.origin}/${slice}`);

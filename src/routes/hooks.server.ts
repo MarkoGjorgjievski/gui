@@ -8,7 +8,7 @@ export const handle: Handle = async ({ resolve, event }) => {
 			return new Response(null, {
 				headers: {
 					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Origin': 'https://gui-kappa.vercel.app/',
 					'Access-Control-Allow-Headers': '*'
 				}
 			});
